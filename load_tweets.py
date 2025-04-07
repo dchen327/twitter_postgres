@@ -229,6 +229,7 @@ def insert_tweet(connection,tweet):
             connection.execute(sql, {
                 'id_users': tweet['in_reply_to_user_id']
             })
+ 
         # insert the tweet
         sql = sqlalchemy.sql.text('''
             INSERT INTO tweets (
