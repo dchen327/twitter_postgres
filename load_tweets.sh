@@ -10,9 +10,13 @@ test-data.zip
 echo 'load normalized'
 for file in $files; do
     # call the load_tweets.py file to load data into pg_normalized
+    ./load_tweets.py --db "$NORMALIZED_DB" --inputs "$file"
 done
 
 echo 'load denormalized'
 for file in $files; do
     # use SQL's COPY command to load data into pg_denormalized
+    unzip -p "$file" |
+    sed 's/\\u0000//g' |
+    psql "$DENORMALIZED_DB" -c "COPY $DENORMALIZED_TABLE ($DENORMALIZED_COLUMN) FROM STDIN csv quote e'\x01' delimiter e'\x02';"
 done
