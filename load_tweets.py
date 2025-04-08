@@ -153,10 +153,10 @@ def insert_tweet(connection,tweet):
         res = connection.execute(sql, {
             'id_users': tweet['user'].get('id'),
             'created_at': tweet['user'].get('created_at'),
-            'screen_name': tweet['user'].get('screen_name'),
-            'name': tweet['user'].get('name'),
-            'location': tweet['user'].get('location'),
-            'description': tweet['user'].get('description'),
+            'screen_name': remove_nulls(tweet['user'].get('screen_name')),
+            'name': remove_nulls(tweet['user'].get('name')),
+            'location': remove_nulls(tweet['user'].get('location')),
+            'description': remove_nulls(tweet['user'].get('description')),
             'protected': tweet['user'].get('protected'),
             'verified': tweet['user'].get('verified'),
             'friends_count': tweet['user'].get('friends_count'),
@@ -196,6 +196,7 @@ def insert_tweet(connection,tweet):
             text = tweet['extended_tweet']['full_text']
         except:
             text = tweet['text']
+        text = remove_nulls(text)
 
         try:
             country_code = tweet['place']['country_code'].lower()
@@ -210,7 +211,7 @@ def insert_tweet(connection,tweet):
             state_code = None
 
         try:
-            place_name = tweet['place']['full_name']
+            place_name = remove_nulls(tweet['place']['full_name'])
         except TypeError:
             place_name = None
 
@@ -286,7 +287,7 @@ def insert_tweet(connection,tweet):
             'quote_count': tweet.get('quote_count'),
             'withheld_copyright': tweet.get('withheld_copyright'),
             'withheld_in_countries': tweet.get('withheld_in_countries'),
-            'source': tweet.get('source'),
+            'source': remove_nulls(tweet.get('source')),
             'text': text,
             'country_code': country_code,
             'state_code': state_code,
